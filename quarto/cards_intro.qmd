@@ -1,0 +1,59 @@
+---
+title: "cards_intro"
+format: html
+execute:
+  echo: true
+  warning: true
+  message: true
+---
+
+```{r, include=FALSE}
+library(pharmaverseadam)
+library(dplyr)
+library(tibble)
+```
+
+
+
+## 目的
+
+このドキュメントは{cards}の概要とその使用方法について説明することを目的とします。
+
+## {cards}とは
+
+[{cards}](https://insightsengineering.github.io/cards/latest-tag/)とはARD作成用の Packageの一つで、ADaMから簡便にARDを生成することができる点が特徴。\
+![](images/clipboard-2742235696.png){width="89"}\
+
+## 準備
+
+ARDを作成するための準備としてDummy dataを用意します。
+
+```{r message: FALSE}
+adae <- pharmaverseadam::adae
+adsl <- pharmaverseadam::adsl
+
+adae
+```
+
+## ARDの作成
+
+{cards}では作成したいTable/Figure/Listingに合わせて、使用するべき関数が分かれています。
+
+ここでは、AE集計のTable作成用のARDとして、[`ard_stack_hierarchical`](https://insightsengineering.github.io/cards/latest-tag/reference/ard_stack_hierarchical.html)を用います。
+
+```{r}
+library(cards)
+ard <- adae %>% 
+  filter(
+    AEBODSYS == "EYE DISORDERS",
+    TRT01A    == "Placebo"
+  ) %>% 
+  cards::ard_stack_hierarchical(
+    by = TRT01A,
+    variables = c(AEBODSYS, AEDECOD),
+    denominator = adsl,
+    id = USUBJID,
+    over_variables = TRUE
+  )
+ard %>% view()
+```
