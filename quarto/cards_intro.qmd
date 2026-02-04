@@ -1,5 +1,5 @@
 ---
-title: "cards_intro"
+title: "ARSとARDについて"
 format: html
 execute:
   echo: true
@@ -13,18 +13,86 @@ library(dplyr)
 library(tibble)
 ```
 
+## はじめに
 
+このドキュメントはCDISC ARSの概要と、ARDの構造について説明することを目的とします。\
+![](images/clipboard-3216776328.png){width="121"}\
 
-## 目的
+## ARSの概要
 
-このドキュメントは{cards}の概要とその使用方法について説明することを目的とします。
+### ARSとは
 
-## {cards}とは
+-   ARS = Analysis Results Standard
+
+-   CDISCが策定している「解析結果そのものを、機械可読・再利用可能な形で標準化するための規格」 のことです。
+
+-   SDTM/ADaMが入力データを標準化したものであるのに対し、ARSは出力結果を標準化しようと試みています。\
+
+### ARSの構造
+
+-   ARSはLinkML (Linked Data Modeling Language.Logical model) という構造をとっている。
+
+-   LinkMLとは「データの構造・意味・制約を、人にも機械にも分かる形で定義する」ためのフレームワーク。
+
+    > 参考
+    >
+    > -   <https://arxiv.org/abs/2511.16935>
+    >
+    > -   [git](github.com/linkml/)
+
+-   ARSの全体像([link](https://cdisc-org.github.io/analysis-results-standard/))
+
+    -   構成要素がグラフ化されている。
+
+    -   構成要素のさらにしたLayerに、子となる構成要素が付加されており、これらがデータ化されている。\
+
+### ARSの構成要素
+
+-   全体像だけを見ても、構成要素が理解しにくい。
+
+-   代表的な構成要素をいくつか
+
+### ARS-IS
+
+ARS-IS = ARS - Implementation Specification ARSをどのように表現・実装するかを定義した文書\
+
+## ARDの概要
+
+### ARDとは
+
+-   ARD = Analysis Results Dataset
+
+-   解析結果をDataset形式としたもの。\
+
+### ARSとARDの関係
+
+CDISCとしては、ARS内の解析内容のMetadataとADaMを用いることで、このARDを自動生成するという発想がある。\
+<https://www.cdisc.org/sites/default/files/2024-04/CDISC%20EU%202024%20ARS%2020240419.pdf>\
+\
+
+### ARDの構造
+
+-   ARDは解析結果を縦方向に積んだ構造を持つ。
+
+###ARDの現在地 ARD自体の 3. 「ARSって結局どんなデータ構造？」
+
+https://pharmasug.org/proceedings/japan2024/PharmaSUG-Japan-2024-02.pdf?utm_source=chatgpt.com
+
+https://github.com/clymbclinical/siera
+
+https://github.com/cdisc-org/analysis-results-standard/tree/main/workfiles/examples/ARS%20v1\
+\
+
+### ARDの作成例
+
+{cards}というPackageを用いて、実際にARDがどのように作成されるのか実演します。
+
+#### {cards}とは
 
 [{cards}](https://insightsengineering.github.io/cards/latest-tag/)とはARD作成用の Packageの一つで、ADaMから簡便にARDを生成することができる点が特徴。\
 ![](images/clipboard-2742235696.png){width="89"}\
 
-## 準備
+#### 準備
 
 ARDを作成するための準備としてDummy dataを用意します。
 
@@ -35,7 +103,7 @@ adsl <- pharmaverseadam::adsl
 adae
 ```
 
-## ARDの作成
+#### ARDの作成
 
 {cards}では作成したいTable/Figure/Listingに合わせて、使用するべき関数が分かれています。
 
@@ -57,3 +125,14 @@ ard <- adae %>%
   )
 ard %>% view()
 ```
+
+#### ARDの作成
+
+{cards}では作成したいTable/Figure/Listingに合わせて、使用するべき関数が分かれています。
+
+## 所感
+
+-   ARSの実装自体はまだ実例が少なく、全体像が見えにくい。
+-   仮にARSをPMDA/FDAに提出したとして、その結果が活用されるのだろうか？という点は疑問が残った。
+-   一方で、ARDを用いて解析結果を標準化したDataにすることは、Sponserにとっても一定の価値がありそうだと考える -\> 業務の標準化に繋がるため。
+    -   ただし、導入コストが非常に高いため、payするまでに時間がかかりそうだとも感じた。
